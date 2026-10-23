@@ -1,5 +1,4 @@
 //
-//
 // Q1 - task_1
 
 class Student {
@@ -8,10 +7,10 @@ class Student {
   num? _grade;
 
   Student({String? name, int? age, num? grade}) {
-    if (name != null && name != " ") {
+    if (name != null && name.trim().isNotEmpty) {
       _name = name;
     } else {
-      _name != '';
+      _name = '';
     }
     if (age != null && age >= 0) {
       _age = age;
@@ -26,6 +25,7 @@ class Student {
       print(' $grade Error: Please enter your correct grade ');
     }
   }
+
   String? get name => _name;
   int? get age => _age;
   num? get grade => _grade;
