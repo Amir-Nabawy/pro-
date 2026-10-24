@@ -109,7 +109,7 @@
 //       print(' ok deposit money $amount . balance $_balance');
 //       print('========================');
 //     } else {
-//       throw ArgumentError('Error : dont doposit  money');
+//       print('Error : dont doposit  money');
 //     }
 //   }
 
@@ -118,7 +118,7 @@
 //       _balance = (_balance ?? 0) - amount;
 //       print('ok withdraw money $amount . balance $_balance');
 //     } else {
-//       throw ArgumentError('Error : dont withdraw money');
+//       print('Error : dont withdraw money');
 //     }
 //   }
 // }
@@ -126,7 +126,7 @@
 // void main() {
 //   BankAccount myAcconunt = BankAccount(accountHolder: 'Amir');
 //   myAcconunt.deposit(1000);
-//   myAcconunt.withdraw(500);
+//   myAcconunt.withdraw(200);
 // }
 
 //  //
@@ -172,53 +172,186 @@
 //   student.displayInfo();
 // }
 
+// //
+// //
+// // Q4  - task_4
+
+// abstract class Employee {
+//   String? name;
+//   int? employeeId;
+//   Employee({this.name, this.employeeId});
+
+//   num calculateSalary();
+// }
+
+// class FullTimeEmployee extends Employee {
+//   num? monthlySalary;
+//   FullTimeEmployee({String? name, int? employeeId, this.monthlySalary})
+//     : super(name: name, employeeId: employeeId);
+
+//   @override
+//   num calculateSalary() => monthlySalary ?? 0;
+// }
+
+// class PartTimeEmployee extends Employee {
+//   num? hourSalary;
+//   num? hourWork;
+//   PartTimeEmployee({
+//     String? name,
+//     int? employeeId,
+//     this.hourSalary,
+//     this.hourWork,
+//   }) : super(name: name, employeeId: employeeId);
+//   @override
+//   num calculateSalary() => (hourSalary ?? 0) * (hourWork ?? 0);
+// }
+
+// void main() {
+//   List<Employee> employees = [
+//     FullTimeEmployee(name: 'Amir', employeeId: 4, monthlySalary: 5250),
+//     PartTimeEmployee(
+//       name: 'Ahmed',
+//       employeeId: 5,
+//       hourSalary: 16,
+//       hourWork: 270,
+//     ),
+//   ];
+//   for (var employee in employees) {
+//     print(
+//       'Employee : ${employee.name} ,  Employee ID : ${employee.employeeId} ,Salary : ${employee.calculateSalary()} money',
+//     );
+//   }
+// }
+
 //
 //
-// Q4  - task_4
+// Q5 - task_5
 
-abstract class Employee {
-  String? name;
-  int? employeeId;
-  Employee({this.name, this.employeeId});
+import 'dart:ffi';
 
-  num calculateSalary();
+import 'package:path/path.dart';
+
+class LibraryItem {
+  String? _id;
+  String? _title;
+  bool _isBorrowed = false;
+
+  LibraryItem({String? id, String? title}) {
+    if (id != null && id.trim().isNotEmpty) {
+      _id = id;
+    } else {
+      _id = '';
+    }
+    if (title != null && title.trim().isNotEmpty) {
+      _title = title;
+    } else {
+      _title = '';
+    }
+  }
+  String? get id => _id;
+  String? get title => _title;
+  bool get isBorrowed => _isBorrowed;
+
+  void borrowItem() {
+    if (_isBorrowed) {
+      print('Sorry $_title is already borrowed');
+    } else {
+      _isBorrowed = true;
+      print('$_title  borrowed.');
+    }
+  }
+
+  void returnItem() {
+    if (!_isBorrowed) {
+      print('Error: "$_title" was not borrowed ');
+    } else {
+      _isBorrowed = false;
+      print('Success "$_title" returned');
+    }
+  }
 }
 
-class FullTimeEmployee extends Employee {
-  num? monthlySalary;
-  FullTimeEmployee({String? name, int? employeeId, this.monthlySalary})
-    : super(name: name, employeeId: employeeId);
+class Book extends LibraryItem {
+  String? author;
 
-  @override
-  num calculateSalary() => monthlySalary ?? 0;
+  Book({super.id, super.title, this.author});
 }
 
-class PartTimeEmployee extends Employee {
-  num? hourSalary;
-  num? hourWork;
-  PartTimeEmployee({
-    String? name,
-    int? employeeId,
-    this.hourSalary,
-    this.hourWork,
-  }) : super(name: name, employeeId: employeeId);
-  @override
-  num calculateSalary() => (hourSalary ?? 0) * (hourWork ?? 0);
+class Magazine extends LibraryItem {
+  int? issueNumber;
+  Magazine({super.id, super.title, this.issueNumber});
+}
+
+class Member {
+  List<LibraryItem> borrowedItems = [];
+
+  void borrow(LibraryItem item) {
+    if (borrowedItems.length >= 3) {
+      print('Reached the maximum 3 items');
+      return;
+    }
+
+    if (item.isBorrowed) {
+      print('Sorry,  already borrowed');
+      return;
+    }
+
+    item.borrowItem();
+    borrowedItems.add(item);
+    print(' successfully borrowed');
+  }
+
+  void returnItem(LibraryItem item) {
+    if (!borrowedItems.contains(item)) {
+      print('Error: not borrow ');
+      return;
+    }
+
+    item.returnItem();
+    borrowedItems.remove(item);
+    print(' successfully returned');
+  }
 }
 
 void main() {
-  List<Employee> employees = [
-    FullTimeEmployee(name: 'Amir', employeeId: 4, monthlySalary: 5250),
-    PartTimeEmployee(
-      name: 'Ahmed',
-      employeeId: 5,
-      hourSalary: 16,
-      hourWork: 270,
-    ),
-  ];
-  for (var employee in employees) {
-    print(
-      'Employee : ${employee.name} ,  Employee ID : ${employee.employeeId} ,Salary : ${employee.calculateSalary()} money',
-    );
-  }
+  // Book book1 = Book(id: '1', title: ' Englsh', author: 'Ahmed');
+  // Magazine mag1 = Magazine(id: '2', title: ' Science ', issueNumber: 45);
+
+  // Member member = Member();
+
+  // member.borrow(book1);
+  // print('+++++++++++++++++++++++');
+  // member.borrow(mag1);
+  // print('+++++++++++++++++++++++');
+
+  // member.returnItem(book1);
+
+  Book book1 = Book(id: '1', title: 'Englsh', author: 'Ahmed');
+  Book book2 = Book(id: '2', title: 'Science', author: 'Mohamed');
+  Magazine mag1 = Magazine(id: '3', title: 'AL-Msrey_ALyom', issueNumber: 45);
+  Magazine mag2 = Magazine(id: '4', title: ' ALhaya', issueNumber: 12);
+
+  Member member = Member();
+
+  member.borrow(book1);
+  print('OK Borrow 1 book ');
+  print('');
+  print('------------------------');
+  member.borrow(book2);
+  print('Ok borrow 2  books');
+  print('');
+  print('------------------------');
+  member.borrow(mag1);
+  print('Ok borrow 1  Magazine');
+  print('');
+  print('------------------------');
+  member.borrow(mag2);
+  print('--------------------------- ---');
+  member.returnItem(book1);
+  print('---------------- ---');
+  member.borrow(mag2);
+  print('---------------- ---');
+  member.returnItem(mag1);
+  print('---------------- ---');
+  member.borrow(book2);
 }
